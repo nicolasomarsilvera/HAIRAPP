@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FormularioEjecucionResource\Pages;
 use App\Models\FormularioEjecucion;
-use App\Models\Cliente;
 use App\Models\Proveedor;
 use App\Models\Vehiculo;
 use App\Models\Zona;
@@ -21,7 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 
 use App\Http\Controllers\PythonController;
-
+use Illuminate\Support\Facades\Http;
 
 class FormularioEjecucionResource extends Resource
 {
@@ -67,18 +66,20 @@ class FormularioEjecucionResource extends Resource
                             ->required(),
                         Forms\Components\Select::make('clientes')
                             ->label('Clientes')
-                            ->options(Cliente::all()->pluck('nombre','id'))
+                            ->relationship('clientes', 'nombre')
                             ->multiple()
-                            ->searchable()
-                            // ->relationship('clientes', 'id')
                             ->required(),
+                        Forms\Components\TextInput::make('respuesta'),
                         Actions::make([
                             Action::make('star')->label('Generar')
                                 ->icon('heroicon-m-cog')
                                 // ->requiresConfirmation()
                                 ->action(function (Get $get, Set $set) {
-                                    $response = PythonController::runPythonScript($get('proveedor_id'), $get('clientes'), $get('vehiculo_id'), $get('horizon_length'));
-                                    $set('respuesta', json_encode($response));
+                                    // $response = PythonController::runPythonScript($get('proveedor_id'), $get('clientes'), $get('vehiculo_id'), $get('horizon_length'));
+                                    // $set('respuesta', json_encode($response));
+                                    // return redirect()->route('view-results',['respuesta' => json_encode($response)]);
+                                    $url = route('view-results');
+                                    Http::post($url, ["respuesta"=>"HOLA"]);
                                 }),
                         ])->visibleOn('view'),
                     ])
@@ -127,7 +128,7 @@ class FormularioEjecucionResource extends Resource
             'index' => Pages\ListFormularioEjecucions::route('/'),
             'create' => Pages\CreateFormularioEjecucion::route('/create'),
             'edit' => Pages\EditFormularioEjecucion::route('/{record}/edit'),
-            'view' => Pages\ViewFormularioEjecucion::route('/{record}'),
+            'view' => Pages\ViewFormularioEjecucion::route('/hair/{record}'),
         ];
     }
 }
