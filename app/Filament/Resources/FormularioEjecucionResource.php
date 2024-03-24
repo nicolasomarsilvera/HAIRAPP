@@ -10,17 +10,12 @@ use App\Models\Zona;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-
-use App\Http\Controllers\PythonController;
-use Illuminate\Support\Facades\Http;
 
 class FormularioEjecucionResource extends Resource
 {
@@ -69,19 +64,6 @@ class FormularioEjecucionResource extends Resource
                             ->relationship('clientes', 'nombre')
                             ->multiple()
                             ->required(),
-                        Forms\Components\TextInput::make('respuesta'),
-                        Actions::make([
-                            Action::make('star')->label('Generar')
-                                ->icon('heroicon-m-cog')
-                                // ->requiresConfirmation()
-                                ->action(function (Get $get, Set $set) {
-                                    // $response = PythonController::runPythonScript($get('proveedor_id'), $get('clientes'), $get('vehiculo_id'), $get('horizon_length'));
-                                    // $set('respuesta', json_encode($response));
-                                    // return redirect()->route('view-results',['respuesta' => json_encode($response)]);
-                                    $url = route('view-results');
-                                    Http::post($url, ["respuesta"=>"HOLA"]);
-                                }),
-                        ])->visibleOn('view'),
                     ])
                     ->columns(1)
                     ->visible(fn (Get $get): bool => $get('zona_id') ? true : false),
