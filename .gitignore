@@ -22,4 +22,3 @@ yarn-error.log
 .gitattributes
 *.config.js
 bootstrap
-artisan
